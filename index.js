@@ -1,7 +1,9 @@
 const APP_VERSION = `v0.0.1`;
 const argv = process.argv.slice(0);
 
-function handleInitCommands ([,,cmd]) {
+function handleInitCommands([, , cmd]) {
+  cmd = cmd ? cmd : null;
+
   switch (cmd) {
     case `--version`:
       console.log(APP_VERSION);
@@ -11,7 +13,7 @@ function handleInitCommands ([,,cmd]) {
 --help    — печатает этот текст;
 --version — печатает версию приложения;`);
       break;
-    case undefined:
+    case null:
       console.log(`Привет пользователь! Эта программа будет запускать сервер «Booking». Автор: Кекс.`);
       break;
     default:

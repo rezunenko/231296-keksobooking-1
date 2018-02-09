@@ -1,0 +1,27 @@
+{
+  "name": "keksobooking_backend",
+  "version": "1.0.0",
+  "description": "keksobooking app",
+  "main": "index.js",
+  "scripts": {
+    "test:lint": "eslint .",
+    "test": "npm run test:lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rezunenko/231296-keksobooking-1.git"
+  },
+  "keywords": [
+    "keksobooking"
+  ],
+  "author": "Rezunenko Timur",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rezunenko/231296-keksobooking-1/issues"
+  },
+  "homepage": "https://github.com/rezunenko/231296-keksobooking-1#readme",
+  "devDependencies": {
+    "eslint": "^4.17.0",
+    "eslint-config-htmlacademy": "^0.4.2"
+  }
+}
