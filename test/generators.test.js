@@ -1,10 +1,10 @@
 const assert = require(`assert`);
-const { getRandom, getRandomItem, getRandomArraySubset } = require(`../src/generators`);
+const {getRandom, getRandomItem, getRandomArraySubset} = require(`../src/generators`);
 
 describe(`Generators`, () => {
   describe(`#getRandom()`, () => {
     let checkFunction = (range) => {
-      const { max = 0, min = 0 } = range;
+      const {max = 0, min = 0} = range;
       let isChecked = true;
       for (let i = 0; i < 1000; i++) {
         let result = getRandom(range);
