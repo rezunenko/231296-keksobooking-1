@@ -1,4 +1,4 @@
-let getRandom = ({max, min = 0, precision = 0}) => {
+let getRandom = ({max = 0, min = 0, precision = 0}) => {
   let random = Math.random() * (max - min) + min;
 
   return Math.round(random * Math.pow(10, precision)) / Math.pow(10, precision);
