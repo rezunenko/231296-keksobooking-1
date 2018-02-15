@@ -8,7 +8,6 @@ const {
     ROOMS_RANGE,
     GUESTS_RANGE,
     AVAILABLE_TIMES,
-    FEATURES,
     X_RANGE,
     Y_RANGE
   }
@@ -62,7 +61,7 @@ describe(`Generate-entity`, () => {
       });
 
       it(`address is correct`, () => {
-        const [x,y] = address.split(`,`);
+        const [x, y] = address.split(`,`);
         assert.equal(x >= X_RANGE.min && x <= X_RANGE.max && y >= Y_RANGE.min && y <= Y_RANGE.max, true, `location is incorrect`);
       });
 
