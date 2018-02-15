@@ -71,6 +71,17 @@ module.exports = {
   name: `Data generator`,
   description: `Generate point's data`,
   generateEntity,
+  params: {
+    HOUSING_NAMES,
+    HOUSING_PRICE_RANGE,
+    HOUSING_TYPES,
+    ROOMS_RANGE,
+    GUESTS_RANGE,
+    AVAILABLE_TIMES,
+    FEATURES,
+    X_RANGE,
+    Y_RANGE
+  },
   execute() {
     console.log(`${colors.grey(`Generated data:`)}`);
     console.log(generateEntity());
