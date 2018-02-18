@@ -8,9 +8,16 @@ const commands = {
   "--generate": require(`./src/generator`)
 };
 
+let onError = (err) => {
+  if (err) {
+    console.error(err.message);
+    process.exit(1);
+  }
+};
+
 function handleInitCommands([, , cmd]) {
   if (commands[cmd]) {
-    commands[cmd].execute();
+    commands[cmd].execute(null, onError);
   } else if (!cmd) {
     console.log(`Привет пользователь! Эта программа будет запускать сервер «Booking». Автор: Кекс.`);
   } else {
