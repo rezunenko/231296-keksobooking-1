@@ -17,7 +17,7 @@ let onError = (err) => {
 
 function handleInitCommands([, , cmd]) {
   if (commands[cmd]) {
-    commands[cmd].execute(null, onError);
+    commands[cmd].execute().catch(onError);
   } else if (!cmd) {
     console.log(`Привет пользователь! Эта программа будет запускать сервер «Booking». Автор: Кекс.`);
   } else {

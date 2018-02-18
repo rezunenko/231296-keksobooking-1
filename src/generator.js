@@ -9,6 +9,14 @@ module.exports = {
   generateEntity,
   execute(filePath = `${process.cwd()}/data.json`, cb) {
     const data = generateEntity();
-    fs.writeFile(filePath, JSON.stringify(data), fileWriteOptions, cb);
+    return new Promise((res, rej) => {
+      fs.writeFile(filePath, JSON.stringify(data), fileWriteOptions, (err) => {
+        if (err) {
+          return rej(err);
+        }
+
+        return res();
+      });
+    });
   }
 };

@@ -21,25 +21,18 @@ let checkAndDeleteFile = (file, cb) => {
 };
 
 describe(`Generate JSON command`, () => {
-  it(`should fail or not existing folder`, (done) => {
+  it(`should fail or not existing folder`, () => {
     const tempFileName = `${__dirname}\folder\testfile.json`;
-    generateCommand.execute(tempFileName, (err) => {
-      if (!err) {
-        assert.fail(`Path ${tempFileName} should not be available`);
-      }
 
-      done();
-    });
+    return generateCommand.execute(tempFileName)
+        .then(() => assert.fail(`Path ${tempFileName} should not be available`))
+        .catch((err) => assert.ok(err));
   });
 
   it(`should create new file`, (done) => {
     const tempFileName = `${__dirname}/testfile.json`;
-    generateCommand.execute(tempFileName, (err) => {
-      if (err) {
-        assert.fail(err.message);
-      }
-
-      return checkAndDeleteFile(tempFileName, done);
-    });
+    generateCommand.execute(tempFileName)
+        .then(() => checkAndDeleteFile(tempFileName, done))
+        .catch((err) => assert.fail(err.message));
   });
 });
