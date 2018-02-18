@@ -1,5 +1,5 @@
 const assert = require(`assert`);
-const {getRandom, getRandomItem, getRandomArraySubset} = require(`../src/generators`);
+const {getRandom, getRandomItem, getRandomArraySubset} = require(`../src/service/generators`);
 
 describe(`Generators`, () => {
   describe(`#getRandom()`, () => {

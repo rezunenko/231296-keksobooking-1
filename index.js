@@ -5,7 +5,7 @@ const commands = {
   "--author": require(`./src/author`),
   "--license": require(`./src/license`),
   "--description": require(`./src/description`),
-  "--get-data": require(`./src/generate-entity`)
+  "--generate": require(`./src/generator`)
 };
 
 function handleInitCommands([, , cmd]) {
