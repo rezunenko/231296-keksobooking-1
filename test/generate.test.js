@@ -29,7 +29,7 @@ describe(`Generate JSON command`, () => {
   });
 
   it(`should create new file`, (done) => {
-    const tempFileName = `${__dirname}/testfile.json`;
+    const tempFileName = `keksobooking.json`;
     generateCommand.execute(tempFileName)
         .then(() => checkAndDeleteFile(tempFileName, done))
         .catch((err) => assert.fail(err.message));

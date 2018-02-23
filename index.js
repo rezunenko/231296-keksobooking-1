@@ -1,5 +1,4 @@
 const readline = require(`readline`);
-const util = require(`util`);
 const fs = require(`fs`);
 const argv = process.argv.slice(0);
 const commands = {

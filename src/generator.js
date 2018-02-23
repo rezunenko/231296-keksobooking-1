@@ -1,4 +1,3 @@
-const colors = require(`colors/safe`);
 const {generateEntity} = require(`./generator/generate-entity`);
 const fs = require(`fs`);
 const fileWriteOptions = {encoding: `utf8`, mode: 0o644};
@@ -16,8 +15,8 @@ module.exports = {
   name: `Data generator`,
   description: `Generate point's data`,
   generateEntity,
-  execute(filePath = `/data.json`, options) {
-    const data = generateElements(options.quantity);
+  execute(filePath = `/data.json`, options = {}) {
+    const data = generateElements(options.quantity || 1);
     return new Promise((res, rej) => {
       console.log(`${process.cwd()}${filePath}`);
       fs.writeFile(`${process.cwd()}${filePath}`, JSON.stringify(data), fileWriteOptions, (err) => {
