@@ -4,7 +4,6 @@ const fs = require(`fs`);
 
 let checkAndDeleteFile = (file, cb) => {
   fs.access(file, (accessError) => {
-    console.log(accessError);
     if (accessError) {
 
       return assert.fail(accessError.message);
