@@ -13,15 +13,14 @@ const commands = {
 function handleInitCommands([, , cmd, port]) {
   if (commands[cmd]) {
     commands[cmd].execute(port);
+    if (cmd !== `--server`) {
+      process.exit(0);
+    }
   } else if (!cmd) {
     cli.execute();
   } else {
     console.error(`Неизвестная команда ${cmd}. Чтобы прочитать правила использования приложения, наберите "--help"`);
     process.exit(1);
-  }
-
-  if (cmd !== `--server`) {
-    process.exit(0);
   }
 }
 

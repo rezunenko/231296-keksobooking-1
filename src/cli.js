@@ -65,6 +65,9 @@ module.exports = {
         .catch((err) => {
           console.error(err);
         })
-        .then(() => rl.close());
+        .then(() => {
+          rl.close();
+          process.exit(0);
+        });
   }
 };
