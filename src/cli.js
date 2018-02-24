@@ -16,7 +16,7 @@ const generateData = () => new Promise((resolve, reject) => {
 const getQuantity = () => new Promise((resolve, reject) => {
   rl.question(`Количество элементов: `, (quantity) => {
     if (Number.isInteger(+quantity) && quantity > 0) {
-      resolve({ quantity });
+      resolve({quantity});
     } else {
       reject(`Отмена ввода количества элементов`);
     }

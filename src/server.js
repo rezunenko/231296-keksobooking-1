@@ -61,5 +61,8 @@ module.exports = {
     server.listen(port, hostname, () => {
       console.log(`Server running at ${serverAddress}`);
     });
+  },
+  close() {
+    server.close();
   }
 };
