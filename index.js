@@ -41,7 +41,7 @@ const getQuantity = () => new Promise((resolve, reject) => {
 
 const getFilePath = (userAnswer) => new Promise((resolve) => {
   rl.question(`Укажите путь к файлу: `, (path) => {
-    userAnswer.path = path ? `/${path.replace(`\\`, `//`)}` : `/keksobooking.json`;
+    userAnswer.path = path ? `${path.replace(`\\`, `//`)}` : `keksobooking.json`;
     resolve(userAnswer);
   });
 });

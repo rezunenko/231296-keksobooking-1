@@ -15,11 +15,11 @@ module.exports = {
   name: `Data generator`,
   description: `Generate point's data`,
   generateEntity,
-  execute(filePath = `/data.json`, options = {}) {
+  execute(filePath = `data.json`, options = {}) {
     const data = generateElements(options.quantity || 1);
     return new Promise((res, rej) => {
-      console.log(`${process.cwd()}${filePath}`);
-      fs.writeFile(`${process.cwd()}${filePath}`, JSON.stringify(data), fileWriteOptions, (err) => {
+      console.log(`File ${process.cwd()}/${filePath}`);
+      fs.writeFile(`${process.cwd()}/${filePath}`, JSON.stringify(data), fileWriteOptions, (err) => {
         if (err) {
           return rej(err);
         }
