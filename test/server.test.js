@@ -53,8 +53,8 @@ describe(`Server`, () => {
         assert.fail(`Server response is incorrect status or content-type /nStatusCode=${statusCode}  content-type=${contentType}`);
       }
       done();
+      server.close();
     });
   });
 });
 
-server.close();
