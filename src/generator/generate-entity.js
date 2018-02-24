@@ -1,5 +1,5 @@
 const colors = require(`colors/safe`);
-const {getRandom, getRandomItem, getRandomArraySubset} = require(`./generators`);
+const {getRandom, getRandomItem, getRandomArraySubset} = require(`../service/generators`);
 
 const HOUSING_NAMES = [
   `Большая уютная квартира`,

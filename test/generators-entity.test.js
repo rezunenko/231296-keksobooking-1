@@ -11,7 +11,7 @@ const {
     X_RANGE,
     Y_RANGE
   }
-} = require(`../src/generate-entity`);
+} = require(`../src/generator/generate-entity`);
 
 let checkUrl = (str, url) => {
 
