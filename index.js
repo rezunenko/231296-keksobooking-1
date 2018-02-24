@@ -47,10 +47,20 @@ const getFilePath = (userAnswer) => new Promise((resolve) => {
 });
 
 const getFileName = (userAnswer) => new Promise((resolve, reject) => {
-  fs.exists(userAnswer.path, (exists) => exists
-    ? rl.question(`Файл существует, перезаписать? (y/n)`, (answer) => answer === `y` ? resolve(userAnswer) : reject(`Отмена перезаписи`))
-    : resolve(userAnswer)
-  );
+  const filePath = `${process.cwd()}${userAnswer.path}`;
+  fs.open(filePath, `wx`, (err) => {
+    if (err) {
+      if (err.code === `EEXIST`) {
+        rl.question(`Файл существует, перезаписать? (y/n)`, (answer) => answer === `y` ? resolve(userAnswer) : reject(`Отмена перезаписи`));
+
+        return;
+      }
+
+      throw err;
+    }
+
+    resolve(userAnswer);
+  });
 });
 
 const createFile = (userAnswer) => {
