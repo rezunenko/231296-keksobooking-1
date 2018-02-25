@@ -63,7 +63,8 @@ let generateEntity = () => {
     "location": {
       "x": x,
       "y": y
-    }
+    },
+    "date": new Date().getTime()
   };
 };
 
