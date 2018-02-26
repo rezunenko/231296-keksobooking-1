@@ -22,7 +22,22 @@ app.get(`/api/offers`, (req, res) => {
   res.send(offers);
 });
 
+app.get(`/api/offers/:date/avatar`, (req, res) => {
+  const date = +req.params[`date`];
+  const filteredData = offers.data.find((item) => item.date === date);
+  if (!filteredData) {
+    res.status(404).send(`Offer is undefined`);
+  }
+
+  res.send(filteredData.author.avatar);
+});
+
 app.post(`/api/offers`, upload.none(), (req, res) => {
+  // TODO сделать корректную обработку запроса
+  res.send(req.body);
+});
+
+app.post(`/api/offers/:date/avatar`, upload.none(), (req, res) => {
   // TODO сделать корректную обработку запроса
   res.send(req.body);
 });
