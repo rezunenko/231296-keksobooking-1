@@ -37,7 +37,7 @@ describe(`POST /api/offers`, () => {
 
   it(`/api/offers should return JSON`, () => {
 
-    return request(app).get(`/api/offers`)
+    return request(app).post(`/api/offers`)
         .set(`Accept`, `application/json`)
         .expect(200)
         .expect(`Content-type`, /json/);
