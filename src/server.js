@@ -5,13 +5,11 @@ const multer = require(`multer`);
 const app = express();
 const PORT = 3000;
 const HOSTNAME = `localhost`;
+const upload = multer({storage: multer.memoryStorage()});
+const offers = generateElements(5);
 
 app.use(express.static(`static`));
 app.use(bodyParser.json());
-
-const upload = multer({storage: multer.memoryStorage()});
-
-const offers = generateElements(5);
 
 app.get(`/api/offers/:date`, (req, res) => {
   const date = +req.params[`date`];
@@ -38,7 +36,5 @@ module.exports = {
       console.log(`Server running at ${serverAddress}`);
     });
   },
-  close() {
-    app.close();
-  }
+  app
 };
