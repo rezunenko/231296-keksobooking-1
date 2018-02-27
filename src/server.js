@@ -1,55 +1,45 @@
-const http = require(`http`);
-const url = require(`url`);
-const fs = require(`fs`);
-const {promisify} = require(`util`);
+const {generateElements} = require(`./generator`);
+const express = require(`express`);
+const bodyParser = require(`body-parser`);
+const multer = require(`multer`);
+const app = express();
 const PORT = 3000;
-const HOSTNAME = `127.0.0.1`;
-const CONTENT_TYPES = {
-  'css': `text/css`,
-  'html': `text/html; charset=UTF-8`,
-  'jpg': `image/jpeg`,
-  'png': `image/png`,
-  'svg': `image/svg+xml`,
-  'ico': `image/x-icon`
-};
+const HOSTNAME = `localhost`;
+const upload = multer({storage: multer.memoryStorage()});
+const offers = generateElements(5);
 
-const readFile = async (path, res) => {
-  const data = await promisify(fs.readFile)(path);
-  const arr = path.split(`.`);
-  const contentType = arr[arr.length - 1];
-  if (!CONTENT_TYPES[contentType]) {
-    throw new Error(`Not resolver content-type`);
+app.use(express.static(`static`));
+app.use(bodyParser.json());
+
+app.get(`/api/offers/:date`, (req, res) => {
+  const date = +req.params[`date`];
+  const filteredData = offers.data.find((item) => item.date === date);
+
+  res.send(filteredData);
+});
+
+app.get(`/api/offers`, (req, res) => {
+  res.send(offers);
+});
+
+app.get(`/api/offers/:date/avatar`, (req, res) => {
+  const date = +req.params[`date`];
+  const filteredData = offers.data.find((item) => item.date === date);
+  if (!filteredData) {
+    res.status(404).send(`Offer is undefined`);
   }
-  res.setHeader(`content-type`, CONTENT_TYPES[contentType]);
-  res.setHeader(`content-length`, Buffer.byteLength(data));
-  res.end(data);
-};
 
-const server = http.createServer((req, res) => {
-  let path = url.parse(req.url).pathname;
-  if (path === `/`) {
-    path = `/index.html`;
-  }
-  const absolutePath = `${process.cwd()}/static${path}`;
-  (async () => {
-    try {
-      const pathStat = await promisify(fs.stat)(absolutePath);
-      if (pathStat.isDirectory()) {
-        throw new Error(`Not found file`);
-      }
+  res.send(filteredData.author.avatar);
+});
 
-      await readFile(absolutePath, res);
-    } catch (err) {
-      res.writeHead(404, `Not found`);
-      res.end();
-    }
+app.post(`/api/offers`, upload.none(), (req, res) => {
+  // TODO сделать корректную обработку запроса
+  res.send(req.body);
+});
 
-  })().catch((err) => {
-    res.writeHead(500, err.message, {
-      'content-type': `text/plain`
-    });
-    res.end(err.message);
-  });
+app.post(`/api/offers/:date/avatar`, upload.none(), (req, res) => {
+  // TODO сделать корректную обработку запроса
+  res.send(req.body);
 });
 
 module.exports = {
@@ -57,12 +47,9 @@ module.exports = {
   description: `Run server`,
   execute(port = PORT, hostname = HOSTNAME) {
     const serverAddress = `http://${hostname}:${port}`;
-    console.log(serverAddress);
-    server.listen(port, hostname, () => {
+    app.listen(port, hostname, () => {
       console.log(`Server running at ${serverAddress}`);
     });
   },
-  close() {
-    server.close();
-  }
+  app
 };
