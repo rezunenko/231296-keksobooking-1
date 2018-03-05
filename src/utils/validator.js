@@ -2,7 +2,7 @@ const DEFAULT_CONVERTER = (value) => value;
 
 const isCorrectIntValue = (value, min = Number.MIN_SAFE_INTEGER, max = Number.MAX_SAFE_INTEGER) => {
 
-  return value && isFinite(+value) && value >= min && value <= max;
+  return isFinite(+value) && value >= min && value <= max;
 };
 
 const printError = (name, value, message) => ({
