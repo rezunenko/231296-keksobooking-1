@@ -1,48 +1,22 @@
-const {getElements} = require(`./generator`);
 const express = require(`express`);
-const bodyParser = require(`body-parser`);
-const multer = require(`multer`);
 const app = express();
+const offersRoute = require(`../routes/offers`);
 const PORT = 3000;
 const HOSTNAME = `localhost`;
-const upload = multer({storage: multer.memoryStorage()});
+const NOT_FOUND_CODE = 404;
+const INTERNAL_SERVER_ERROR = 500;
 
 app.use(express.static(`static`));
-app.use(bodyParser.json());
+app.use(`api/offers`, offersRoute);
 
-app.get(`/api/offers/:date`, (req, res) => {
-  const offers = getElements(5);
-  const date = +req.params[`date`];
-  const filteredData = offers.data.find((item) => item.date === date);
-
-  res.send(filteredData);
+// Handling 404
+app.use(function (req, res) {
+  res.status(NOT_FOUND_CODE).send(`Page not found. Error ${NOT_FOUND_CODE}`);
 });
 
-app.get(`/api/offers`, (req, res) => {
-  const {skip, limit} = req.query;
-  const offers = getElements(5, +skip, +limit);
-  res.send(offers);
-});
-
-app.get(`/api/offers/:date/avatar`, (req, res) => {
-  const offers = getElements(5);
-  const date = +req.params[`date`];
-  const filteredData = offers.data.find((item) => item.date === date);
-  if (!filteredData) {
-    res.status(404).send(`Offer is undefined`);
-  }
-
-  res.send(filteredData.author.avatar);
-});
-
-app.post(`/api/offers`, upload.none(), (req, res) => {
-  // TODO сделать корректную обработку запроса
-  res.send(req.body);
-});
-
-app.post(`/api/offers/:date/avatar`, upload.none(), (req, res) => {
-  // TODO сделать корректную обработку запроса
-  res.send(req.body);
+// Handling 500
+app.use(function (error, req, res) {
+  res.status(INTERNAL_SERVER_ERROR).send(`Internal Server Error ${INTERNAL_SERVER_ERROR}`);
 });
 
 module.exports = {
