@@ -1,4 +1,4 @@
-const {generateEntity} = require(`./generator/generate-entity`);
+const {generateEntity} = require(`../generator/generate-entity`);
 const fs = require(`fs`);
 const fileWriteOptions = {encoding: `utf8`, mode: 0o644};
 const generateElements = (quantity) => {

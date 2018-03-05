@@ -1,17 +1,15 @@
 const assert = require(`assert`);
+const {generateEntity} = require(`../src/generator/generate-entity`);
 const {
-  generateEntity,
-  params: {
-    HOUSING_NAMES,
-    HOUSING_PRICE_RANGE,
-    HOUSING_TYPES,
-    ROOMS_RANGE,
-    GUESTS_RANGE,
-    AVAILABLE_TIMES,
-    X_RANGE,
-    Y_RANGE
-  }
-} = require(`../src/generator/generate-entity`);
+  HOUSING_NAMES,
+  HOUSING_PRICE_RANGE,
+  HOUSING_TYPES,
+  ROOMS_RANGE,
+  GUESTS_RANGE,
+  AVAILABLE_TIMES,
+  X_RANGE,
+  Y_RANGE
+} = require(`../src/generator/generator-constants`);
 
 let checkUrl = (str, url) => {
 
