@@ -1,5 +1,5 @@
 const request = require(`supertest`);
-const server = require(`../src/server`);
+const server = require(`../src/server/server`);
 const app = server.app;
 
 describe(`POST /api/offers`, () => {
@@ -10,18 +10,44 @@ describe(`POST /api/offers`, () => {
         .expect(404);
   });
 
-  it(`/api/offers must be success`, () => {
-
-    return request(app).post(`/api/offers`)
-        .set(`Accept`, `application/json`)
-        .expect(200);
+  it(`should consume JSON`, () => {
+    return request(app).post(`/api/offers`).send({
+      title: `Некрасивый негостеприимный и очень ветхий домик с призраками`,
+      type: `flat`,
+      rooms: `1`,
+      price: `15000`,
+      address: `Москва, ул.Строителей ...`,
+      checkin: `14:00`,
+      checkout: `14:00`
+    }).expect(200, {
+      title: `Некрасивый негостеприимный и очень ветхий домик с призраками`,
+      type: `flat`,
+      rooms: `1`,
+      price: `15000`,
+      address: `Москва, ул.Строителей ...`,
+      checkin: `14:00`,
+      checkout: `14:00`
+    });
   });
 
-  it(`/api/offers/:date/avatar must be success`, () => {
-
-    return request(app).post(`/api/offers/:date/avatar`)
-        .set(`Accept`, `application/json`)
-        .expect(200);
+  it(`should consume form-data`, () => {
+    return request(app).post(`/api/offers`)
+        .field(`title`, `Некрасивый негостеприимный и очень ветхий домик с призраками`)
+        .field(`type`, `flat`)
+        .field(`rooms`, `1`)
+        .field(`price`, `15000`)
+        .field(`address`, `Москва, ул.Строителей ...`)
+        .field(`checkin`, `14:00`)
+        .field(`checkout`, `14:00`)
+        .expect(200, {
+          title: `Некрасивый негостеприимный и очень ветхий домик с призраками`,
+          type: `flat`,
+          rooms: `1`,
+          price: `15000`,
+          address: `Москва, ул.Строителей ...`,
+          checkin: `14:00`,
+          checkout: `14:00`
+        });
   });
 });
 

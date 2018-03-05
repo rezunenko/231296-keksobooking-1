@@ -1,6 +1,6 @@
 const readline = require(`readline`);
 const fs = require(`fs`);
-const generator = require(`./generator`);
+const generator = require(`./commands/generator`);
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,

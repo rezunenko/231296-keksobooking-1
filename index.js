@@ -1,13 +1,13 @@
 const cli = require(`./src/cli`);
 const argv = process.argv.slice(0);
 const commands = {
-  "--help": require(`./src/help`),
-  "--version": require(`./src/version`),
-  "--author": require(`./src/author`),
-  "--license": require(`./src/license`),
-  "--description": require(`./src/description`),
-  "--generate": require(`./src/generator`),
-  "--server": require(`./src/server`)
+  "--help": require(`./src/commands/help`),
+  "--version": require(`./src/commands/version`),
+  "--author": require(`./src/commands/author`),
+  "--license": require(`./src/commands/license`),
+  "--description": require(`./src/commands/description`),
+  "--generate": require(`./src/commands/generator`),
+  "--server": require(`./src/server/server`)
 };
 
 function handleInitCommands([, , cmd, port]) {
