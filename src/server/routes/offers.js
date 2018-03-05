@@ -15,7 +15,7 @@ offersRouter.use(bodyParser.json());
 
 const upload = multer({storage: multer.memoryStorage()});
 
-offersRouter.get(``, (req, res) => {
+offersRouter.get(``, async(async (req, res) => {
   const {skip, limit} = req.query;
   if (!isCorrectIntValue(skip, 0, 20) || !isCorrectIntValue(limit, 0, 20)) {
     res.statusCode(BAD_REQUEST).send({
@@ -29,9 +29,9 @@ offersRouter.get(``, (req, res) => {
   }
 
   res.end();
-});
+}));
 
-offersRouter.get(`/:date`, async((req, res) => {
+offersRouter.get(`/:date`, async(async (req, res) => {
   const offers = getElements(5);
   const date = +req.params[`date`];
   const offer = offers.data.find((item) => item.date === date);
@@ -49,7 +49,7 @@ offersRouter.get(`/:date`, async((req, res) => {
   return true;
 }));
 
-offersRouter.get(`/:date/avatar`, (req, res) => {
+offersRouter.get(`/:date/avatar`, async(async (req, res) => {
   const offers = getElements(5);
   const date = +req.params[`date`];
   const filteredData = offers.data.find((item) => item.date === date);
@@ -73,7 +73,7 @@ offersRouter.get(`/:date/avatar`, (req, res) => {
 
   res.send(filteredData.author.avatar).end();
   return true;
-});
+}));
 
 offersRouter.post(``, upload.single(`avatar`), (req, res) => {
   const data = req.body;
