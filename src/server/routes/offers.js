@@ -10,14 +10,16 @@ const {validateSchema, isCorrectIntValue} = require(`../../utils/validator`);
 const offerSchema = require(`./validation`);
 const ValidationError = require(`../errors/validation-error`);
 const offersRouter = new Router();
+const SKIP_DEFAULT = 0;
+const LIMIT_DEFAULT = 20;
 
 offersRouter.use(bodyParser.json());
 
 const upload = multer({storage: multer.memoryStorage()});
 
 offersRouter.get(``, async(async (req, res) => {
-  const {skip, limit} = req.query;
-  if (!isCorrectIntValue(skip, 0, 20) || !isCorrectIntValue(limit, 0, 20)) {
+  const {skip = SKIP_DEFAULT, limit = LIMIT_DEFAULT} = req.query;
+  if (!isCorrectIntValue(skip, SKIP_DEFAULT, LIMIT_DEFAULT) || !isCorrectIntValue(limit, SKIP_DEFAULT, LIMIT_DEFAULT)) {
     res.statusCode(BAD_REQUEST).send({
       error: `Validation error`,
       fieldName: `skip or limit`,
