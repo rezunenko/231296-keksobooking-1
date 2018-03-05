@@ -25,7 +25,7 @@ describe(`validate offers`, () => {
   describe(`TITLE validation`, () => {
     const fieldName = `title`;
     it(`should be require field`, () => {
-      assertField(fieldName, 0, `is required`);
+      assertField(fieldName, null, `is required`);
     });
     it(`should be in range 30..140`, () => {
       assertField(fieldName, 123, `should be in range 30..140`);
@@ -52,7 +52,7 @@ describe(`validate offers`, () => {
   describe(`PRICE validation`, () => {
     const fieldName = `price`;
     it(`should be require`, () => {
-      assertField(fieldName, 0, `is required`);
+      assertField(fieldName, null, `is required`);
     });
     it(`should be in range`, () => {
       assertField(fieldName, 888888888, `should be in range ${HOUSING_PRICE_RANGE.min}..${HOUSING_PRICE_RANGE.max}`);
@@ -69,7 +69,7 @@ describe(`validate offers`, () => {
   describe(`ADDRESS validation`, () => {
     const fieldName = `address`;
     it(`should require field`, () => {
-      assertField(fieldName, 0, `is required`);
+      assertField(fieldName, null, `is required`);
     });
     it(`should be in range`, () => {
       assertField(fieldName, `ул.`, `should be in range ${ADDRESS_LENGTH_LIMIT.min}..${ADDRESS_LENGTH_LIMIT.max}`);
@@ -79,7 +79,7 @@ describe(`validate offers`, () => {
   describe(`TYPE validation`, () => {
     const fieldName = `type`;
     it(`should require field`, () => {
-      assertField(fieldName, 0, `is required`);
+      assertField(fieldName, null, `is required`);
     });
     it(`should be one of the types list`, () => {
       assertField(fieldName, `testFailed`, `should be one of [${HOUSING_TYPES}]`);
@@ -89,7 +89,7 @@ describe(`validate offers`, () => {
   describe(`ROOMS validation`, () => {
     const fieldName = `rooms`;
     it(`should require field`, () => {
-      assertField(fieldName, 0, `is required`);
+      assertField(fieldName, null, `is required`);
     });
     it(`should be in range`, () => {
       assertField(fieldName, `6`, `should be in range ${ROOMS_RANGE.min}..${ROOMS_RANGE.max}`);
