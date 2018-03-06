@@ -35,7 +35,6 @@ offersRouter.get(``, async(async (req, res) => {
       errorMessage: `incorrect request ${req.query}`
     });
   } else {
-    console.log(`11111111111111111111111111111111111`);
     const offers = await offersRouter.store.getAllOffers(+skip, +limit);
     res.send(offers);
   }

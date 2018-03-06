@@ -2,7 +2,6 @@ const offersRouter = require(`../src/server/routes/offers`);
 const {getElements} = require(`./generator`);
 
 const offers = getElements(5);
-console.log(`HEYHEY`, offers);
 
 class Cursor {
   constructor(data) {
@@ -28,7 +27,6 @@ class Cursor {
 
 class MockOffersStore {
   constructor() {
-    console.log(`444444444444444444444444444`);
   }
 
   async getOffer(date) {
@@ -37,7 +35,7 @@ class MockOffersStore {
   }
 
   async getAllOffers() {
-    console.log(`2222222222222222222222222222222222222`);
+
     return new Cursor(offers.data);
   }
 

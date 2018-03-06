@@ -63,7 +63,6 @@ class OfferStore {
   }
 
   async getAllOffers(skip, limit) {
-    console.log(`333333333333333333333333333333`);
     const data = await (await this.collection).find();
 
     return await toPage(data, skip, limit);
