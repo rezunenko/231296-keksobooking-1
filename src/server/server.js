@@ -1,4 +1,5 @@
 const express = require(`express`);
+const logger = require(`../../winston`);
 const app = express();
 const offerStore = require(`./routes/store`);
 const imageStore = require(`./routes/image-store`);
@@ -16,7 +17,7 @@ module.exports = {
   execute(port = PORT, hostname = HOSTNAME) {
     const serverAddress = `http://${hostname}:${port}`;
     app.listen(port, hostname, () => {
-      console.log(`Server running at ${serverAddress}`);
+      logger.info(`Server running at ${serverAddress}`);
     });
   },
   app

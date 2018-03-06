@@ -14,6 +14,7 @@ const offerSchema = require(`./validation`);
 const ValidationError = require(`../errors/validation-error`);
 const offersRouter = new Router();
 const {Duplex} = require(`stream`);
+const logger = require(`../../../winston`);
 
 offersRouter.use(bodyParser.json());
 
@@ -99,7 +100,7 @@ offersRouter.post(``, upload.single(`avatar`), async(async (req, res) => {
   const errors = validateSchema(data, offerSchema);
 
   if (errors.length > 0) {
-    console.error(errors);
+    logger.error(errors);
     throw new ValidationError(errors);
   }
 

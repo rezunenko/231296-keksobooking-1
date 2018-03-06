@@ -1,5 +1,6 @@
 const cli = require(`./src/cli`);
 require(`./dotend`);
+const logger = require(`./winston`);
 const argv = process.argv.slice(0);
 const commands = {
   "--help": require(`./src/commands/help`),
@@ -19,7 +20,7 @@ function handleInitCommands([, , cmd, port]) {
   } else if (!cmd) {
     cli.execute();
   } else {
-    console.error(`Неизвестная команда ${cmd}. Чтобы прочитать правила использования приложения, наберите "--help"`);
+    logger.log(`verbose`, `Неизвестная команда ${cmd}. Чтобы прочитать правила использования приложения, наберите "--help"`);
     process.exit(1);
   }
 }
