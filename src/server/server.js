@@ -1,6 +1,8 @@
 const express = require(`express`);
 const app = express();
-const offersRoute = require(`./routes/offers`);
+const offerStore = require(`./routes/store`);
+const imageStore = require(`./routes/image-store`);
+const offersRoute = require(`./routes/offers`)(offerStore, imageStore);
 const PORT = 3000;
 const HOSTNAME = `localhost`;
 

@@ -13,12 +13,9 @@ const {validateSchema, isCorrectIntValue} = require(`../../utils/validator`);
 const offerSchema = require(`./validation`);
 const ValidationError = require(`../errors/validation-error`);
 const offersRouter = new Router();
-const offerStore = require(`./store`);
-const imageStore = require(`./image-store`);
 const {Duplex} = require(`stream`);
 
 offersRouter.use(bodyParser.json());
-offersRouter.store = offerStore;
 
 const upload = multer({storage: multer.memoryStorage()});
 
@@ -38,7 +35,8 @@ offersRouter.get(``, async(async (req, res) => {
       errorMessage: `incorrect request ${req.query}`
     });
   } else {
-    const offers = await offersRouter.store.getAllOffers(skip, limit);
+    console.log(`11111111111111111111111111111111111`);
+    const offers = await offersRouter.store.getAllOffers(+skip, +limit);
     res.send(offers);
   }
 
@@ -77,7 +75,7 @@ offersRouter.get(`/:date/avatar`, async(async (req, res) => {
   }
   const avatar = offer.author && offer.author.avatar;
   const mimeType = offer.author && offer.author[`mime-type`];
-  const {info, stream} = await imageStore.get(date);
+  const {info, stream} = await offersRouter.imageStore.get(date);
 
   if (!avatar || !info) {
     res.status(NOT_FOUND_CODE).send({
@@ -109,7 +107,7 @@ offersRouter.post(``, upload.single(`avatar`), async(async (req, res) => {
   data.date = new Date().getTime();
   const filename = data.date;
   if (avatar) {
-    await imageStore.save(filename, createStreamFromBuffer(avatar.buffer));
+    await offersRouter.imageStore.save(filename, createStreamFromBuffer(avatar.buffer));
     data.avatar = `api/offers/${filename}/avatar`;
     data.avatarMimeType = `image/png`;
   }
@@ -143,4 +141,9 @@ offersRouter.use((exception, req, res, next) => {
   return false;
 });
 
-module.exports = offersRouter;
+module.exports = (store, imageStore) => {
+  offersRouter.store = store;
+  offersRouter.imageStore = imageStore;
+
+  return offersRouter;
+};

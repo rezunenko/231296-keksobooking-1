@@ -1,6 +1,8 @@
 const request = require(`supertest`);
-const server = require(`../src/server/server`);
-const app = server.app;
+const mockOffersRouter = require(`./mock-offers-router`);
+const app = require(`express`)();
+
+app.use(`/api/offers`, mockOffersRouter);
 
 describe(`GET /api/offers`, () => {
   it(`unknown address shoul rerutn 404`, () => {
@@ -13,7 +15,6 @@ describe(`GET /api/offers`, () => {
   it(`/api/offers?skip=0&limit=3 should return JSON`, () => {
 
     return request(app).get(`/api/offers?skip=0&limit=3`)
-        .set(`Accept`, `application/json`)
         .expect(200)
         .expect(`Content-type`, /json/);
   });
