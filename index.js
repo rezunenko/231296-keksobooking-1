@@ -1,4 +1,5 @@
 const cli = require(`./src/cli`);
+require(`./dotend`);
 const argv = process.argv.slice(0);
 const commands = {
   "--help": require(`./src/commands/help`),
