@@ -21,7 +21,7 @@ class OfferStore {
 
   async getAllOffers() {
 
-    return (await this.collection).findOne();
+    return (await this.collection).find();
   }
 
   async save(offerData) {
