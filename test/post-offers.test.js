@@ -1,9 +1,9 @@
 const request = require(`supertest`);
-// const mockOffersRouter = require(`./mock-offers-router`);
+const mockOffersRouter = require(`./mock-offers-router`);
 const express = require(`express`);
 const app1 = express();
 
-// app1.use(`/api/offers`, mockOffersRouter);
+app1.use(`/api/offers`, mockOffersRouter);
 
 describe(`POST /api/offers`, () => {
   it(`unknown address shoul rerutn 404`, () => {
