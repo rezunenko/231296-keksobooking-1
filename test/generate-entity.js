@@ -12,8 +12,8 @@ const {
   MAX_PHOTOS_COUNT,
   PHOTOS_IDS_RANGE,
   AVATARS_RANGE
-} = require(`./generator-constants`);
-const {getRandom, getRandomItem, getRandomArraySubset} = require(`../utils/generators`);
+} = require(`../src/generator/generator-constants`);
+const {getRandom, getRandomItem, getRandomArraySubset} = require(`../src/utils/generators`);
 
 let getRandomPhotos = () => {
   const photosCount = getRandom({max: MAX_PHOTOS_COUNT});
@@ -54,8 +54,7 @@ let generateEntity = () => {
     "location": {
       "x": x,
       "y": y
-    },
-    "date": new Date().getTime()
+    }
   };
 };
 

@@ -1,5 +1,5 @@
 const assert = require(`assert`);
-const {generateEntity} = require(`../src/generator/generate-entity`);
+const {generateEntity} = require(`./generate-entity`);
 const {
   HOUSING_NAMES,
   HOUSING_PRICE_RANGE,

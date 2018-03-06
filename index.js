@@ -6,7 +6,6 @@ const commands = {
   "--author": require(`./src/commands/author`),
   "--license": require(`./src/commands/license`),
   "--description": require(`./src/commands/description`),
-  "--generate": require(`./src/commands/generator`),
   "--server": require(`./src/server/server`)
 };
 

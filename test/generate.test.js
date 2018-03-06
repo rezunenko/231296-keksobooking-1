@@ -1,5 +1,5 @@
 const assert = require(`assert`);
-const generateCommand = require(`../src/commands/generator`);
+const generateCommand = require(`./generator`);
 const fs = require(`fs`);
 
 let checkAndDeleteFile = (file, cb) => {
