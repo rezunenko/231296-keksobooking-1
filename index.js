@@ -1,4 +1,3 @@
-const cli = require(`./src/cli`);
 require(`./dotend`);
 const logger = require(`./winston`);
 const argv = process.argv.slice(0);
@@ -18,8 +17,6 @@ function handleInitCommands([, , cmd, port]) {
     if (cmd !== `--server`) {
       process.exit(0);
     }
-  } else if (!cmd) {
-    cli.execute();
   } else {
     logger.log(`verbose`, `Неизвестная команда ${cmd}. Чтобы прочитать правила использования приложения, наберите "--help"`);
     process.exit(1);

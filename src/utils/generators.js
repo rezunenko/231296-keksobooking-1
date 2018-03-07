@@ -9,7 +9,7 @@ let getRandomItem = (arr) => {
   return arr[getRandom({max: arr.length - 1})];
 };
 
-function getRandomArraySubset(arr) {
+let getRandomArraySubset = (arr) => {
   let subsetLength = getRandom({max: arr.length});
   let subset = [];
   let item = null;
@@ -24,7 +24,7 @@ function getRandomArraySubset(arr) {
   }
 
   return subset;
-}
+};
 
 module.exports = {
   getRandom,

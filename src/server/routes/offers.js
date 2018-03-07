@@ -41,7 +41,7 @@ offersRouter.get(``, async(async (req, res) => {
       errorMessage: `incorrect request ${req.query}`
     });
   } else {
-    const offers = await offersRouter.store.getAllOffers(+skip, +limit);
+    const offers = await offersRouter.store.getAll(+skip, +limit);
     res.send(offers);
   }
 
@@ -50,7 +50,7 @@ offersRouter.get(``, async(async (req, res) => {
 
 offersRouter.get(`/:date`, async(async (req, res) => {
   const date = +req.params[`date`];
-  const offer = await offersRouter.store.getOffer(date);
+  const offer = await offersRouter.store.get(date);
 
   if (!offer) {
     res.statusCode(NOT_FOUND_CODE).send({
@@ -67,7 +67,7 @@ offersRouter.get(`/:date`, async(async (req, res) => {
 
 offersRouter.get(`/:date/avatar`, async(async (req, res) => {
   const date = +req.params[`date`];
-  const offer = await offersRouter.store.getOffer(date);
+  const offer = await offersRouter.store.get(date);
 
   if (!offer) {
     res.status(BAD_REQUEST).send({
