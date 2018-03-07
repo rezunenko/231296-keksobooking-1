@@ -17,6 +17,11 @@ const {Duplex} = require(`stream`);
 const logger = require(`../../../winston`);
 
 offersRouter.use(bodyParser.json());
+offersRouter.use((req, res, next) => {
+  res.header(`Access-Control-Allow-Origin`, `*`);
+  res.header(`Access-Control-Allow-Headers`, `Origin, X-Requested-With, Content-Type, Accept`);
+  next();
+});
 
 const upload = multer({storage: multer.memoryStorage()});
 
