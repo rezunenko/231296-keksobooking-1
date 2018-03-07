@@ -70,8 +70,8 @@ class OfferStore {
   }
 
   async save(offerData) {
-
-    return (await this.collection).insertOne(offerData);
+    const collection = await this.collection;
+    return collection.insertOne(offerData);
   }
 }
 

@@ -4,11 +4,12 @@ const logger = require(`./winston`);
 const argv = process.argv.slice(0);
 const commands = {
   "--help": require(`./src/commands/help`),
-  "--version": require(`./src/commands/version`),
   "--author": require(`./src/commands/author`),
+  "--version": require(`./src/commands/version`),
+  "--server": require(`./src/server/server`),
+  "--fill": require(`./src/commands/fill`),
   "--license": require(`./src/commands/license`),
-  "--description": require(`./src/commands/description`),
-  "--server": require(`./src/server/server`)
+  "--description": require(`./src/commands/description`)
 };
 
 function handleInitCommands([, , cmd, port]) {

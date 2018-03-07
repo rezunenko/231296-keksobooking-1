@@ -102,6 +102,9 @@ offersRouter.post(``, upload.single(`avatar`), async(async (req, res) => {
   if (avatar) {
     data.avatar = avatar;
   }
+  // TODO заглушка из-за ошибок в коде Академии
+  data.checkin = data.checkin || data.timein;
+  data.checkout = data.checkout || data.timeout;
   const errors = validateSchema(data, offerSchema);
 
   if (errors.length > 0) {
