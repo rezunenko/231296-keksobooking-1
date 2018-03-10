@@ -53,10 +53,10 @@ module.exports = {
   name: `fill`,
   description: `Fill database`,
   generateEntity,
-  execute(quantity = 5) {
+  execute: async (quantity = 5) => {
     const offers = generateElements(quantity);
 
-    offers.forEach(async (item) => {
+    for (let item of offers) {
       const errors = validateSchema(item, offerSchema);
 
       if (errors.length > 0) {
@@ -67,6 +67,6 @@ module.exports = {
       item.date = new Date().getTime();
       const result = await offerStore.save(item);
       console.log(result);
-    });
+    }
   }
 };

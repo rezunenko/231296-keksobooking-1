@@ -1,7 +1,4 @@
 const OK = 200;
-const BAD_REQUEST = 400;
-const NOT_FOUND_CODE = 404;
-const INTERNAL_SERVER_ERROR = 500;
 const SKIP_DEFAULT = 0;
 const LIMIT_DEFAULT = 20;
 
@@ -9,12 +6,15 @@ const {Router} = require(`express`);
 const bodyParser = require(`body-parser`);
 const multer = require(`multer`);
 const async = require(`../../utils/async`);
-const {validateSchema, isCorrectIntValue} = require(`../../utils/validator`);
-const offerSchema = require(`./validation`);
+const {validateSchema} = require(`../../utils/validator`);
+const {postSchema, getSchema} = require(`./validation`);
 const ValidationError = require(`../errors/validation-error`);
+const NotFoundError = require(`../errors/not-found-error`);
+const InternalServerError = require(`../errors/internal-server-error`);
 const offersRouter = new Router();
 const {Duplex} = require(`stream`);
 const logger = require(`../../../winston`);
+const {defaultHandler, validateRequestQueryParams, validateRequestBodyParams, imageHandler} = require(`../middleware`);
 
 offersRouter.use(bodyParser.json());
 offersRouter.use((req, res, next) => {
@@ -32,71 +32,55 @@ const createStreamFromBuffer = (buffer) => {
   return stream;
 };
 
-offersRouter.get(``, async(async (req, res) => {
+const getOffers = async(async (req) => {
   const {skip = SKIP_DEFAULT, limit = LIMIT_DEFAULT} = req.query;
-  if (!isCorrectIntValue(skip, SKIP_DEFAULT, LIMIT_DEFAULT) || !isCorrectIntValue(limit, SKIP_DEFAULT, LIMIT_DEFAULT)) {
-    res.statusCode(BAD_REQUEST).send({
-      error: `Validation error`,
-      fieldName: `skip or limit`,
-      errorMessage: `incorrect request ${req.query}`
-    });
-  } else {
-    const offers = await offersRouter.store.getAll(+skip, +limit);
-    res.send(offers);
-  }
 
-  res.end();
-}));
+  return await offersRouter.store.getAll(+skip, +limit);
+});
 
-offersRouter.get(`/:date`, async(async (req, res) => {
+const getOffer = async(async (req) => {
   const date = +req.params[`date`];
   const offer = await offersRouter.store.get(date);
 
   if (!offer) {
-    res.statusCode(NOT_FOUND_CODE).send({
-      error: `Not found`,
-      errorMessage: `Offer ${date} not found`
-    }).end();
-
-    return false;
+    throw new NotFoundError(`There is no offer for ${date} date`);
   }
-  res.send(offer).end();
 
-  return true;
-}));
+  return offer;
+});
 
-offersRouter.get(`/:date/avatar`, async(async (req, res) => {
+const getAvatar = async(async (req, res) => {
   const date = +req.params[`date`];
   const offer = await offersRouter.store.get(date);
 
   if (!offer) {
-    res.status(BAD_REQUEST).send({
-      error: `Bad request`,
-      fieldName: `Offer`,
-      errorMessage: `Offer is undefined`
-    }).end();
-
-    return false;
+    throw new NotFoundError(`Offer wasn't found`);
   }
+
   const avatar = offer.author && offer.author.avatar;
   const mimeType = offer.author && offer.author[`mime-type`];
-  const {info, stream} = await offersRouter.imageStore.get(date);
 
-  if (!avatar || !info) {
-    res.status(NOT_FOUND_CODE).send({
-      error: `Bad request`,
-      fieldName: `Avatar`,
-      errorMessage: `Avatar is undefined`
-    }).end();
+  if (!avatar) {
+    throw new NotFoundError(`There is no avatar for this offer`);
   }
+
+  const {info, stream} = await offersRouter.imageStore.get(date);
+  if (!info) {
+    throw new NotFoundError(`File ${avatar.path} not found`);
+  }
+
+  if (!stream) {
+    logger.error(`Loading image error ${avatar.path}`);
+    throw new InternalServerError(`File not found`);
+  }
+
   res.set(`content-type`, mimeType);
   res.set(`content-length`, info.length);
   res.status(OK);
-  stream.pipe(res);
-  return true;
-}));
+  return {res, stream};
+});
 
-offersRouter.post(``, upload.single(`avatar`), async(async (req, res) => {
+const addOffer = async(async (req) => {
   const data = req.body;
   const avatar = req.file;
   if (avatar) {
@@ -105,7 +89,7 @@ offersRouter.post(``, upload.single(`avatar`), async(async (req, res) => {
   // TODO заглушка из-за ошибок в коде Академии
   data.checkin = data.checkin || data.timein;
   data.checkout = data.checkout || data.timeout;
-  const errors = validateSchema(data, offerSchema);
+  const errors = validateSchema(data, postSchema);
 
   if (errors.length > 0) {
     logger.error(errors);
@@ -120,34 +104,14 @@ offersRouter.post(``, upload.single(`avatar`), async(async (req, res) => {
     data.avatarMimeType = `image/png`;
   }
   await offersRouter.store.save(data);
-  res.send(data).end();
-}));
 
-offersRouter.use((exception, req, res, next) => {
-  let data = exception;
-  if (data !== 1) {
-    data = exception.errors;
-    res.status(400).send(data);
-  } else {
-    res.status(500);
-  }
-  next();
+  return data;
 });
 
-offersRouter.use((exception, req, res, next) => {
-  let data = exception;
-  if (exception instanceof ValidationError) {
-    data = exception.errors;
-    res.status(BAD_REQUEST).send(data);
-    next();
-    return false;
-  }
-  res.status(INTERNAL_SERVER_ERROR).send({
-    error: `Internal Error`,
-    errorMessage: `Server has fallen into unrecoverable problem.`
-  }).end();
-  return false;
-});
+offersRouter.get(``, validateRequestQueryParams(getSchema), defaultHandler(getOffers));
+offersRouter.get(`/:date`, defaultHandler(getOffer));
+offersRouter.get(`/:date/avatar`, imageHandler(getAvatar));
+offersRouter.post(`/offers`, upload.single(`avatar`), validateRequestBodyParams(postSchema), defaultHandler(addOffer));
 
 module.exports = (store, imageStore) => {
   offersRouter.store = store;

@@ -6,7 +6,8 @@
   "scripts": {
     "test:lint": "eslint .",
     "test:mocha": "mocha",
-    "test": "npm run test:lint && npm run test:mocha"
+    "test": "npm run test:lint && npm run test:mocha",
+    "db": "mongod --port=21017 --dbpath=./data"
   },
   "repository": {
     "type": "git",

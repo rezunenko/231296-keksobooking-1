@@ -61,5 +61,13 @@ module.exports = {
       },
       message: `should be one of [${choices}]`
     };
+  },
+  isNumber() {
+    return {
+      assert(num) {
+        return !isNaN(num);
+      },
+      message: `should be an number`
+    };
   }
 };
