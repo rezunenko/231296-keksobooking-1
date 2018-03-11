@@ -1,6 +1,7 @@
 const {NAMES_LIST} = require(`../../generator/generator-constants`);
 const {getRandomItem} = require(`../../utils/generators`);
 const db = require(`../../database/database`);
+const logger = require(`../../../winston`);
 
 const setupCollection = async () => {
   const dBase = await db;
@@ -56,23 +57,23 @@ class OfferStore {
     this.collection = collection;
   }
 
-  async getOffer(date) {
+  async get(date) {
     const data = await (await this.collection).findOne({date});
 
-    return getFormatedData(data);
+    return data ? getFormatedData(data) : null;
   }
 
-  async getAllOffers(skip, limit) {
+  async getAll(skip, limit) {
     const data = await (await this.collection).find();
 
     return await toPage(data, skip, limit);
   }
 
   async save(offerData) {
-
-    return (await this.collection).insertOne(offerData);
+    const collection = await this.collection;
+    return collection.insertOne(offerData);
   }
 }
 
 module.exports = new OfferStore(setupCollection()
-    .catch((err) => console.error(`Failed to set up "offers" collection`, err)));
+    .catch((err) => logger.error(`Failed to set up "offers" collection`, err)));

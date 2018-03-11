@@ -1,5 +1,5 @@
 const {validate} = require(`../src/utils/validator`);
-const schema = require(`../src/server/routes/validation`);
+const {postSchema: schema} = require(`../src/server/routes/validation`);
 const {
   HOUSING_TYPES,
   ROOMS_RANGE,
@@ -27,8 +27,8 @@ describe(`validate offers`, () => {
     it(`should be require field`, () => {
       assertField(fieldName, null, `is required`);
     });
-    it(`should be in range 30..140`, () => {
-      assertField(fieldName, 123, `should be in range 30..140`);
+    it(`should be in range 20..140`, () => {
+      assertField(fieldName, 123, `should be in range 20..140`);
     });
   });
 

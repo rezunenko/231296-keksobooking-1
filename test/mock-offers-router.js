@@ -29,12 +29,12 @@ class MockOffersStore {
   constructor() {
   }
 
-  async getOffer(date) {
+  async get(date) {
 
     return offers.data.find((item) => item.date === date);
   }
 
-  async getAllOffers() {
+  async getAll() {
 
     return new Cursor(offers.data);
   }

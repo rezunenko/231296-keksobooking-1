@@ -32,7 +32,6 @@ module.exports = {
   execute(filePath = `data.json`, options = {}) {
     const data = generateElements(options.quantity || 1);
     return new Promise((res, rej) => {
-      console.log(`File ${process.cwd()}/${filePath}`);
       fs.writeFile(`${process.cwd()}/${filePath}`, JSON.stringify(data), fileWriteOptions, (err) => {
         if (err) {
           return rej(err);

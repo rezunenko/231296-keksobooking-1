@@ -19,8 +19,7 @@ let checkUrl = (str, url) => {
 const unique = (arr) => {
   let obj = {};
 
-  for (let i = 0; i < arr.length; i++) {
-    let str = arr[i];
+  for (const str of arr) {
     obj[str] = true;
   }
 

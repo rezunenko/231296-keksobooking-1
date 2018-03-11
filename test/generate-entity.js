@@ -64,6 +64,5 @@ module.exports = {
   generateEntity,
   execute() {
     console.log(`${colors.grey(`Generated data:`)}`);
-    console.log(generateEntity());
   }
 };

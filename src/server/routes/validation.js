@@ -1,4 +1,4 @@
-const {textRange, isImage, oneOf, anyOf, inRange, unique, isTimeFormat} = require(`../../utils/assertion`);
+const {textRange, isImage, oneOf, anyOf, inRange, unique, isTimeFormat, isNumber} = require(`../../utils/assertion`);
 const {getRandomItem} = require(`../../utils/generators`);
 const {
   TITLE_LENGTH_LIMIT,
@@ -12,7 +12,22 @@ const {
   NAMES_LENGTH_LIMIT
 } = require(`../../generator/generator-constants`);
 
-const schema = {
+const getSchema = {
+  'skip': {
+    required: false,
+    assertions: [
+      isNumber()
+    ]
+  },
+  'limit': {
+    required: false,
+    assertions: [
+      isNumber()
+    ]
+  },
+};
+
+const postSchema = {
   title: {
     required: true,
     converter(val) {
@@ -98,4 +113,7 @@ const schema = {
   }
 };
 
-module.exports = schema;
+module.exports = {
+  getSchema,
+  postSchema
+};
