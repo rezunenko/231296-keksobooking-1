@@ -1,4 +1,3 @@
-const OK = 200;
 const SKIP_DEFAULT = 0;
 const LIMIT_DEFAULT = 20;
 
@@ -6,15 +5,14 @@ const {Router} = require(`express`);
 const bodyParser = require(`body-parser`);
 const multer = require(`multer`);
 const async = require(`../../utils/async`);
-const {validateSchema} = require(`../../utils/validator`);
 const {postSchema, getSchema} = require(`./validation`);
-const ValidationError = require(`../errors/validation-error`);
 const NotFoundError = require(`../errors/not-found-error`);
 const InternalServerError = require(`../errors/internal-server-error`);
+const BadRequestError = require(`../errors/bad-request-error`);
 const offersRouter = new Router();
 const {Duplex} = require(`stream`);
 const logger = require(`../../../winston`);
-const {defaultHandler, validateRequestQueryParams, validateRequestBodyParams, imageHandler} = require(`../middleware`);
+const {defaultHandler, validateRequestQueryParams, validateRequestBodyParams, imageHandler} = require(`../middleware/index`);
 
 offersRouter.use(bodyParser.json());
 offersRouter.use((req, res, next) => {
@@ -54,7 +52,7 @@ const getAvatar = async(async (req, res) => {
   const offer = await offersRouter.store.get(date);
 
   if (!offer) {
-    throw new NotFoundError(`Offer wasn't found`);
+    throw new BadRequestError(`Offer wasn't found`);
   }
 
   const avatar = offer.author && offer.author.avatar;
@@ -76,7 +74,7 @@ const getAvatar = async(async (req, res) => {
 
   res.set(`content-type`, mimeType);
   res.set(`content-length`, info.length);
-  res.status(OK);
+
   return {res, stream};
 });
 
@@ -85,15 +83,6 @@ const addOffer = async(async (req) => {
   const avatar = req.file;
   if (avatar) {
     data.avatar = avatar;
-  }
-  // TODO заглушка из-за ошибок в коде Академии
-  data.checkin = data.checkin || data.timein;
-  data.checkout = data.checkout || data.timeout;
-  const errors = validateSchema(data, postSchema);
-
-  if (errors.length > 0) {
-    logger.error(errors);
-    throw new ValidationError(errors);
   }
 
   data.date = new Date().getTime();
@@ -111,7 +100,7 @@ const addOffer = async(async (req) => {
 offersRouter.get(``, validateRequestQueryParams(getSchema), defaultHandler(getOffers));
 offersRouter.get(`/:date`, defaultHandler(getOffer));
 offersRouter.get(`/:date/avatar`, imageHandler(getAvatar));
-offersRouter.post(`/offers`, upload.single(`avatar`), validateRequestBodyParams(postSchema), defaultHandler(addOffer));
+offersRouter.post(``, upload.single(`avatar`), validateRequestBodyParams(postSchema), defaultHandler(addOffer));
 
 module.exports = (store, imageStore) => {
   offersRouter.store = store;

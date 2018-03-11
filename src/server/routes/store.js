@@ -60,7 +60,7 @@ class OfferStore {
   async get(date) {
     const data = await (await this.collection).findOne({date});
 
-    return getFormatedData(data);
+    return data ? getFormatedData(data) : null;
   }
 
   async getAll(skip, limit) {

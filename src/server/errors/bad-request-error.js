@@ -1,10 +1,10 @@
-const NOT_FOUND_CODE = 404;
+const BAD_REQUEST = 400;
 
-module.exports = class NotFoundError extends Error {
+module.exports = class BadRequestError extends Error {
   constructor(reason) {
     super();
-    this.statusCode = NOT_FOUND_CODE;
-    this.message = `Not Found`;
+    this.statusCode = BAD_REQUEST;
+    this.message = `Bad request`;
     this.errorMessage = reason;
   }
 
