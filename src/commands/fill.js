@@ -1,5 +1,5 @@
 const offerStore = require(`../server/routes/store`);
-const ValidationError = require(`../server/errors/validation-error`);
+const BadRequestError = require(`../server/errors/bad-request-error`);
 const {validateSchema} = require(`../utils/validator`);
 const offerSchema = require(`../server/routes/validation`);
 const logger = require(`../../winston`);
@@ -61,7 +61,7 @@ module.exports = {
 
       if (errors.length > 0) {
         logger.error(errors);
-        throw new ValidationError(errors);
+        throw new BadRequestError(errors);
       }
 
       item.date = new Date().getTime();

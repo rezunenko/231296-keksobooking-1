@@ -1,5 +1,5 @@
 const {validateSchema} = require(`../../utils/validator`);
-const ValidationError = require(`../errors/validation-error`);
+const BadRequestError = require(`../errors/bad-request-error`);
 const InternalServerError = require(`../errors/internal-server-error`);
 const NotFoundError = require(`../errors/not-found-error`);
 const logger = require(`../../../winston`);
@@ -27,11 +27,11 @@ const imageHandler = (fn) => async (req, res, next) => {
   }
 };
 
-const errorHandler = (err, req, res) => {
+const errorHandler = (err, req, res, next) => {
   if (err.name === `MongoError`) {
-    err = new ValidationError({errorMessage: `Offer is already exists`});
+    err = new BadRequestError({errorMessage: `Offer is already exists`});
   }
-  if (!(err instanceof NotFoundError) && !(err instanceof ValidationError)) {
+  if (!(err instanceof NotFoundError) && !(err instanceof BadRequestError)) {
     logger.error(err, `Unexpected error occurred`);
     err = new InternalServerError();
   } else {
@@ -39,13 +39,14 @@ const errorHandler = (err, req, res) => {
   }
   res.status(err.statusCode);
   res.json(err.showError());
+  next(err);
 };
 
 const validateRequestQueryParams = (schema) => async (req, res, next) => {
   const errors = validateSchema(req.query, schema);
   if (errors.length > 0) {
 
-    return next(new ValidationError(errors));
+    return next(new BadRequestError(errors));
   }
 
   return next();
@@ -55,7 +56,7 @@ const validateRequestBodyParams = (schema) => async (req, res, next) => {
   const errors = validateSchema(req.body, schema);
   if (errors.length > 0) {
 
-    return next(new ValidationError(errors));
+    return next(new BadRequestError(errors));
   }
 
   return next();
