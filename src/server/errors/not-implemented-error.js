@@ -1,4 +1,4 @@
-const NOT_IMPLEMENTED = 501;
+const {NOT_IMPLEMENTED} = require(`./http-status`);
 
 module.exports = class NotImplementedError extends Error {
   constructor(reason) {

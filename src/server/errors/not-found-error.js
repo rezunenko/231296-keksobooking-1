@@ -1,4 +1,4 @@
-const NOT_FOUND_CODE = 404;
+const {NOT_FOUND_CODE} = require(`./http-status`);
 
 module.exports = class NotFoundError extends Error {
   constructor(reason) {

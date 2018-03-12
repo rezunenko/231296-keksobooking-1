@@ -1,4 +1,4 @@
-const BAD_REQUEST = 400;
+const {BAD_REQUEST} = require(`./http-status`);
 
 module.exports = class BadRequestError extends Error {
   constructor(reason) {
