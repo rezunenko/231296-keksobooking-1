@@ -62,7 +62,7 @@ const getAvatar = async(async (req, res) => {
     throw new NotFoundError(`There is no avatar for this offer`);
   }
 
-  const {info, stream} = await offersRouter.imageStore.get(date);
+  const {info, stream} = await offersRouter.imageStore.get(date) || {};
   if (!info) {
     throw new NotFoundError(`File ${avatar.path} not found`);
   }

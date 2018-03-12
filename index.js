@@ -14,7 +14,7 @@ const commands = {
 function handleInitCommands([, , cmd, port]) {
   if (commands[cmd]) {
     commands[cmd].execute(port);
-    if (cmd !== `--server`) {
+    if (cmd !== `--server` && cmd !== `--fill`) {
       process.exit(0);
     }
   } else {

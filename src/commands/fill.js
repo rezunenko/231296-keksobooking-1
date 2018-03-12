@@ -15,8 +15,7 @@ const {
   FEATURES,
   X_RANGE,
   Y_RANGE,
-  NAMES_LIST,
-  // AVATARS_RANGE
+  NAMES_LIST
 } = require(`../generator/generator-constants`);
 
 let generateEntity = () => {
@@ -36,7 +35,8 @@ let generateEntity = () => {
     "checkin": time,
     "checkout": time,
     "features": getRandomArraySubset(FEATURES),
-    // "avatar": `https://robohash.org/${getRandom(AVATARS_RANGE)}`
+    "x": x,
+    "y": y
   };
 };
 
@@ -65,8 +65,9 @@ module.exports = {
       }
 
       item.date = new Date().getTime();
-      const result = await offerStore.save(item);
-      console.log(result);
+      await offerStore.save(item);
     }
+
+    process.exit(0);
   }
 };
