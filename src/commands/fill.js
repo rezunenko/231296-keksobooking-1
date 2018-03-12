@@ -53,35 +53,39 @@ const generateElements = (quantity) => {
   return list;
 };
 
+const saveOffers = async (quantity) => {
+  const offers = generateElements(quantity);
+  let time = new Date().getTime();
+
+  for (let item of offers) {
+    const errors = validateSchema(item, offerSchema);
+
+    if (errors.length > 0) {
+      logger.error(errors);
+      throw new BadRequestError(errors);
+    }
+
+    item.date = time++;
+
+    const filename = `user0${getRandom({max: TEST_AVATARS_COUNT, min: TEST_AVATAR_FIEST_INDEX})}`;
+    let avatar = fs.readFileSync(`${process.cwd()}/static/img/avatars/${filename}.png`);
+    if (avatar) {
+      await
+      imageStore.save(item.date, createStreamFromBuffer(avatar));
+      item.avatar = `api/offers/${item.date}/avatar`;
+      item.avatarMimeType = `image/png`;
+    }
+
+    await offerStore.save(item);
+  }
+};
+
 module.exports = {
   name: `fill`,
   description: `Fill database`,
   generateEntity,
   execute: async (quantity = 5) => {
-    const offers = generateElements(quantity);
-    let time = new Date().getTime();
-
-    for (let item of offers) {
-      const errors = validateSchema(item, offerSchema);
-
-      if (errors.length > 0) {
-        logger.error(errors);
-        throw new BadRequestError(errors);
-      }
-
-      item.date = time++;
-
-      const filename = `user0${getRandom({max: TEST_AVATARS_COUNT, min: TEST_AVATAR_FIEST_INDEX})}`;
-      let avatar = fs.readFileSync(`${process.cwd()}/static/img/avatars/${filename}.png`);
-      if (avatar) {
-        await imageStore.save(item.date, createStreamFromBuffer(avatar));
-        item.avatar = `api/offers/${item.date}/avatar`;
-        item.avatarMimeType = `image/png`;
-      }
-
-      await offerStore.save(item);
-    }
-
+    await saveOffers(quantity);
     process.exit(0);
   }
 };
