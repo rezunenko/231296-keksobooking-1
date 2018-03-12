@@ -1,7 +1,7 @@
 const {NAMES_LIST} = require(`../../generator/generator-constants`);
 const {getRandomItem} = require(`../../utils/generators`);
 const db = require(`../../database/database`);
-const logger = require(`../../../winston`);
+const logger = require(`../../winston`);
 
 const setupCollection = async () => {
   const dBase = await db;

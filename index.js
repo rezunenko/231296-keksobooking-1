@@ -1,5 +1,4 @@
-require(`./dotend`);
-const logger = require(`./winston`);
+const logger = require(`./src/winston`);
 const argv = process.argv.slice(0);
 const commands = {
   "--help": require(`./src/commands/help`),
@@ -14,7 +13,7 @@ const commands = {
 function handleInitCommands([, , cmd, port]) {
   if (commands[cmd]) {
     commands[cmd].execute(port);
-    if (cmd !== `--server`) {
+    if (cmd !== `--server` && cmd !== `--fill`) {
       process.exit(0);
     }
   } else {

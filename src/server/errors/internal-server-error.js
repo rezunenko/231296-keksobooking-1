@@ -1,4 +1,4 @@
-const INTERNAL_SERVER_ERROR = 500;
+const {INTERNAL_SERVER_ERROR} = require(`./http-status`);
 
 module.exports = class InternalServerError extends Error {
   constructor() {

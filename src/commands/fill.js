@@ -1,10 +1,14 @@
-const offerStore = require(`../server/routes/store`);
-const ValidationError = require(`../server/errors/validation-error`);
+const offerStore = require(`../server/offer/store`);
+const BadRequestError = require(`../server/errors/bad-request-error`);
 const {validateSchema} = require(`../utils/validator`);
-const offerSchema = require(`../server/routes/validation`);
-const logger = require(`../../winston`);
+const createStreamFromBuffer = require(`../utils/stream-from-buffer`);
+const offerSchema = require(`../server/offer/validation`);
+const logger = require(`../winston`);
 const {getRandom, getRandomItem, getRandomArraySubset} = require(`../../src/utils/generators`);
-// const imageStore = require(`../server/routes/image-store`);
+const imageStore = require(`../server/image/store`);
+const fs = require(`fs`);
+const TEST_AVATARS_COUNT = 8;
+const TEST_AVATAR_FIEST_INDEX = 1;
 const {
   HOUSING_NAMES,
   HOUSING_PRICE_RANGE,
@@ -15,8 +19,7 @@ const {
   FEATURES,
   X_RANGE,
   Y_RANGE,
-  NAMES_LIST,
-  // AVATARS_RANGE
+  NAMES_LIST
 } = require(`../generator/generator-constants`);
 
 let generateEntity = () => {
@@ -36,7 +39,8 @@ let generateEntity = () => {
     "checkin": time,
     "checkout": time,
     "features": getRandomArraySubset(FEATURES),
-    // "avatar": `https://robohash.org/${getRandom(AVATARS_RANGE)}`
+    "x": x,
+    "y": y
   };
 };
 
@@ -49,24 +53,39 @@ const generateElements = (quantity) => {
   return list;
 };
 
+const saveOffers = async (quantity) => {
+  const offers = generateElements(quantity);
+  let time = new Date().getTime();
+
+  for (let item of offers) {
+    const errors = validateSchema(item, offerSchema);
+
+    if (errors.length > 0) {
+      logger.error(errors);
+      throw new BadRequestError(errors);
+    }
+
+    item.date = time++;
+
+    const filename = `user0${getRandom({max: TEST_AVATARS_COUNT, min: TEST_AVATAR_FIEST_INDEX})}`;
+    let avatar = fs.readFileSync(`${process.cwd()}/static/img/avatars/${filename}.png`);
+    if (avatar) {
+      await
+      imageStore.save(item.date, createStreamFromBuffer(avatar));
+      item.avatar = `api/offers/${item.date}/avatar`;
+      item.avatarMimeType = `image/png`;
+    }
+
+    await offerStore.save(item);
+  }
+};
+
 module.exports = {
   name: `fill`,
   description: `Fill database`,
   generateEntity,
   execute: async (quantity = 5) => {
-    const offers = generateElements(quantity);
-
-    for (let item of offers) {
-      const errors = validateSchema(item, offerSchema);
-
-      if (errors.length > 0) {
-        logger.error(errors);
-        throw new ValidationError(errors);
-      }
-
-      item.date = new Date().getTime();
-      const result = await offerStore.save(item);
-      console.log(result);
-    }
+    await saveOffers(quantity);
+    process.exit(0);
   }
 };

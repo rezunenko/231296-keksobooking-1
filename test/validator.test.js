@@ -1,5 +1,5 @@
 const {validate} = require(`../src/utils/validator`);
-const {postSchema: schema} = require(`../src/server/routes/validation`);
+const {postSchema: schema} = require(`../src/server/offer/validation`);
 const {
   HOUSING_TYPES,
   ROOMS_RANGE,
