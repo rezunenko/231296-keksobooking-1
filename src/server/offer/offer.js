@@ -60,9 +60,43 @@ class Offer {
       return {res, stream};
     });
 
+    this.getPhoto = async(async (req, res) => {
+      const date = +req.params[`date`];
+      const id = +req.params[`id`];
+      const data = await this.offersRouter.store.get(date);
+
+      if (!data) {
+        throw new BadRequestError(`Offer wasn't found`);
+      }
+
+      const photos = data.offer.photos;
+
+      if (!photos) {
+        throw new NotFoundError(`There is no avatar for this offer`);
+      }
+
+      const photoIndex = data.offer.photos.indexOf(`api/offers/${date}/photo/${id}`);
+      const mimeType = data.offer.photosMimeType[photoIndex];
+
+      const {info, stream} = await this.offersRouter.photoStore.get(`${date}/${id}`) || {};
+      if (!info) {
+        throw new NotFoundError(`File ${date}/${id} not found`);
+      }
+
+      if (!stream) {
+        logger.error(`Loading photo error`);
+        throw new InternalServerError(`File not found`);
+      }
+
+      res.set(`content-type`, mimeType);
+      res.set(`content-length`, info.length);
+
+      return {res, stream};
+    });
+
+
     this.add = async(async (req) => {
       const data = req.body;
-      console.log(`HELOOOOOOOOO!!!!`);
       const avatar = (req.files[`avatar`] || {})[0];
       const photos = req.files[`photos`] || [];
 

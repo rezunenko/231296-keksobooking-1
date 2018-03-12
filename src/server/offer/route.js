@@ -19,6 +19,7 @@ const uploadConfig = upload.fields([{name: `avatar`, maxCount: 1}, {name: `photo
 offersRouter.get(``, validateRequestQueryParams(getSchema), defaultHandler(offer.getAll));
 offersRouter.get(`/:date`, defaultHandler(offer.get));
 offersRouter.get(`/:date/avatar`, imageHandler(offer.getAvatar));
+offersRouter.get(`/:date/photo/:id`, imageHandler(offer.getPhoto));
 offersRouter.post(``, uploadConfig, validateRequestBodyParams(postSchema), defaultHandler(offer.add));
 
 module.exports = (store, imageStore, photoStore) => {
