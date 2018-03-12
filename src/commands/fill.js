@@ -55,6 +55,7 @@ module.exports = {
   generateEntity,
   execute: async (quantity = 5) => {
     const offers = generateElements(quantity);
+    let time = new Date().getTime();
 
     for (let item of offers) {
       const errors = validateSchema(item, offerSchema);
@@ -64,7 +65,7 @@ module.exports = {
         throw new BadRequestError(errors);
       }
 
-      item.date = new Date().getTime();
+      item.date = time++;
       await offerStore.save(item);
     }
 
