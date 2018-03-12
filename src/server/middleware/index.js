@@ -28,6 +28,14 @@ const imageHandler = (fn) => async (req, res, next) => {
   }
 };
 
+const setContentType = (req, res) => {
+  if (req.get(`Accept`) && req.get(`Accept`).includes(`text/html`)) {
+    res.set(`Content-Type`, `text/html`);
+  } else {
+    res.set(`Content-Type`, `application/json`);
+  }
+};
+
 const clientErrorHandler = (err, req, res, next) => {
   if (err.name === `MongoError`) {
     err = new BadRequestError({errorMessage: `Offer is already exists`});
@@ -35,7 +43,8 @@ const clientErrorHandler = (err, req, res, next) => {
   if ((err instanceof NotFoundError) || (err instanceof BadRequestError)) {
     logger.error(err, err.message);
     res.status(err.statusCode);
-    res.json(err.showError());
+    setContentType(req, res);
+    res.send(err.showError());
   } else {
     next(err);
   }
@@ -48,7 +57,7 @@ const errorHandler = (err, req, res, next) => {
   } else {
     logger.error(err, `Not implemented method`);
   }
-
+  setContentType(req, res);
   res.status(err.statusCode);
   res.json(err.showError());
   next();
