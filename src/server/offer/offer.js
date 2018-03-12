@@ -62,17 +62,27 @@ class Offer {
 
     this.add = async(async (req) => {
       const data = req.body;
-      const avatar = req.file;
-      if (avatar) {
-        data.avatar = avatar;
-      }
+      console.log(`HELOOOOOOOOO!!!!`);
+      const avatar = (req.files[`avatar`] || {})[0];
+      const photos = req.files[`photos`] || [];
 
       data.date = new Date().getTime();
       const filename = data.date;
       if (avatar) {
         await this.offersRouter.imageStore.save(filename, createStreamFromBuffer(avatar.buffer));
         data.avatar = `api/offers/${filename}/avatar`;
-        data.avatarMimeType = `image/png`;
+        data.avatarMimeType = avatar.mimetype;
+      }
+
+      data.photos = [];
+      let index = 1;
+      for (let photo of photos) {
+        await this.offersRouter.photoStore.save(`${filename}/${index}`, createStreamFromBuffer(photo.buffer));
+        data.photos.push({
+          photo: `api/offers/${filename}/photo/${index}`,
+          mimetype: photo.mimetype
+        });
+        index = index + 1;
       }
       await this.offersRouter.store.save(data);
 

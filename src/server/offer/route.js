@@ -14,15 +14,17 @@ offersRouter.use((req, res, next) => {
 });
 
 const upload = multer({storage: multer.memoryStorage()});
+const uploadConfig = upload.fields([{name: `avatar`, maxCount: 1}, {name: `photos`, maxCount: 12}]);
 
 offersRouter.get(``, validateRequestQueryParams(getSchema), defaultHandler(offer.getAll));
 offersRouter.get(`/:date`, defaultHandler(offer.get));
 offersRouter.get(`/:date/avatar`, imageHandler(offer.getAvatar));
-offersRouter.post(``, upload.single(`avatar`), validateRequestBodyParams(postSchema), defaultHandler(offer.add));
+offersRouter.post(``, uploadConfig, validateRequestBodyParams(postSchema), defaultHandler(offer.add));
 
-module.exports = (store, imageStore) => {
+module.exports = (store, imageStore, photoStore) => {
   offersRouter.store = store;
   offersRouter.imageStore = imageStore;
+  offersRouter.photoStore = photoStore;
 
   return offersRouter;
 };
