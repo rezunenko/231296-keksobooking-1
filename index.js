@@ -1,4 +1,3 @@
-require(`./dotend`);
 const logger = require(`./winston`);
 const argv = process.argv.slice(0);
 const commands = {
