@@ -1,6 +1,7 @@
 const {validateSchema} = require(`../../utils/validator`);
 const BadRequestError = require(`../errors/bad-request-error`);
 const InternalServerError = require(`../errors/internal-server-error`);
+const NotImplementedError = require(`../errors/not-implemented-error`);
 const NotFoundError = require(`../errors/not-found-error`);
 const logger = require(`../../../winston`);
 
@@ -27,19 +28,30 @@ const imageHandler = (fn) => async (req, res, next) => {
   }
 };
 
-const errorHandler = (err, req, res, next) => {
+const clientErrorHandler = (err, req, res, next) => {
   if (err.name === `MongoError`) {
     err = new BadRequestError({errorMessage: `Offer is already exists`});
   }
-  if (!(err instanceof NotFoundError) && !(err instanceof BadRequestError)) {
-    logger.error(err, `Unexpected error occurred`);
-    err = new InternalServerError();
-  } else {
+  if ((err instanceof NotFoundError) || (err instanceof BadRequestError)) {
     logger.error(err, err.message);
+    res.status(err.statusCode);
+    res.json(err.showError());
+  } else {
+    next(err);
   }
+};
+
+const errorHandler = (err, req, res, next) => {
+  if (!(err instanceof NotImplementedError)) {
+    err = new InternalServerError();
+    logger.error(err, `Unexpected error occurred`);
+  } else {
+    logger.error(err, `Not implemented method`);
+  }
+
   res.status(err.statusCode);
   res.json(err.showError());
-  next(err);
+  next();
 };
 
 const validateRequestQueryParams = (schema) => async (req, res, next) => {
@@ -65,6 +77,7 @@ const validateRequestBodyParams = (schema) => async (req, res, next) => {
 module.exports = {
   defaultHandler,
   imageHandler,
+  clientErrorHandler,
   errorHandler,
   validateRequestQueryParams,
   validateRequestBodyParams
