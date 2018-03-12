@@ -3,7 +3,7 @@ const BadRequestError = require(`../errors/bad-request-error`);
 const InternalServerError = require(`../errors/internal-server-error`);
 const NotImplementedError = require(`../errors/not-implemented-error`);
 const NotFoundError = require(`../errors/not-found-error`);
-const logger = require(`../../../winston`);
+const logger = require(`../../winston`);
 
 const defaultHandler = (fn) => async (req, res, next) => {
   try {

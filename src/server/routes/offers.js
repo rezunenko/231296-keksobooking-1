@@ -11,7 +11,7 @@ const InternalServerError = require(`../errors/internal-server-error`);
 const BadRequestError = require(`../errors/bad-request-error`);
 const offersRouter = new Router();
 const {Duplex} = require(`stream`);
-const logger = require(`../../../winston`);
+const logger = require(`../../winston`);
 const {defaultHandler, validateRequestQueryParams, validateRequestBodyParams, imageHandler} = require(`../middleware/index`);
 
 offersRouter.use(bodyParser.json());

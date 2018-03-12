@@ -2,7 +2,7 @@ const offerStore = require(`../server/routes/store`);
 const BadRequestError = require(`../server/errors/bad-request-error`);
 const {validateSchema} = require(`../utils/validator`);
 const offerSchema = require(`../server/routes/validation`);
-const logger = require(`../../winston`);
+const logger = require(`../winston`);
 const {getRandom, getRandomItem, getRandomArraySubset} = require(`../../src/utils/generators`);
 // const imageStore = require(`../server/routes/image-store`);
 const {

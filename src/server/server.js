@@ -1,12 +1,12 @@
+const showDotEndnfo = require(`../utils/dotend`);
 const express = require(`express`);
-const logger = require(`../../winston`);
+const logger = require(`../winston`);
 const app = express();
 const offerStore = require(`./routes/store`);
 const imageStore = require(`./routes/image-store`);
 const middleware = require(`./middleware/index`);
 const offersRoute = require(`./routes/offers`)(offerStore, imageStore);
 const NotImplementedError = require(`./errors/not-implemented-error`);
-const showDotEndnfo = require(`../utils/dotend`);
 const env = process.env;
 const PORT = env.SERVER_PORT || 3000;
 const HOSTNAME = env.SERVER_HOST || `localhost`;

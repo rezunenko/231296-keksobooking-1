@@ -1,4 +1,4 @@
-const logger = require(`./winston`);
+const logger = require(`./src/winston`);
 const argv = process.argv.slice(0);
 const commands = {
   "--help": require(`./src/commands/help`),
