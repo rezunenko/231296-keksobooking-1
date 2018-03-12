@@ -5,7 +5,7 @@ const {MongoClient} = require(`mongodb`);
 const logger = require(`../winston`);
 
 module.exports = MongoClient.connect(url)
-    .then((client) => client.db(`offers`))
+    .then((client) => client.db(`keksobooking`))
     .catch((err) => {
       logger.error(`Failed to connect to MongoDB`, err);
       process.exit(1);

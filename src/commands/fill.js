@@ -1,10 +1,10 @@
-const offerStore = require(`../server/routes/store`);
+const offerStore = require(`../server/offer/store`);
 const BadRequestError = require(`../server/errors/bad-request-error`);
 const {validateSchema} = require(`../utils/validator`);
-const offerSchema = require(`../server/routes/validation`);
+const offerSchema = require(`../server/offer/validation`);
 const logger = require(`../winston`);
 const {getRandom, getRandomItem, getRandomArraySubset} = require(`../../src/utils/generators`);
-// const imageStore = require(`../server/routes/image-store`);
+// const imageStore = require(`../server/image/store`);
 const {
   HOUSING_NAMES,
   HOUSING_PRICE_RANGE,

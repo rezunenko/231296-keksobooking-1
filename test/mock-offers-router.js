@@ -1,4 +1,4 @@
-const offersRouter = require(`../src/server/routes/offers`);
+const offersRouter = require(`../src/server/offer/route`);
 const {getElements} = require(`./generator`);
 
 const offers = getElements(5);
