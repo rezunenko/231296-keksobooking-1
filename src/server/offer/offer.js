@@ -8,121 +8,126 @@ const BadRequestError = require(`../errors/bad-request-error`);
 const createStreamFromBuffer = require(`../../utils/stream-from-buffer`);
 const logger = require(`../../winston`);
 
-class Offer {
-  constructor(store) {
-    this.offersRouter = store;
 
-    this.getAll = async(async (req) => {
-      const {skip = SKIP_DEFAULT, limit = LIMIT_DEFAULT} = req.query;
+module.exports = (store) => {
+  const offersRouter = store;
 
-      return await this.offersRouter.store.getAll(+skip, +limit);
-    });
+  const getAll = async(async (req) => {
+    const {skip = SKIP_DEFAULT, limit = LIMIT_DEFAULT} = req.query;
 
-    this.get = async(async (req) => {
-      const date = +req.params[`date`];
-      const offer = await this.offersRouter.store.get(date);
+    return await offersRouter.store.getAll(+skip, +limit);
+  });
 
-      if (!offer) {
-        throw new NotFoundError(`There is no offer for ${date} date`);
-      }
+  const get = async(async (req) => {
+    const date = +req.params[`date`];
+    const offer = await offersRouter.store.get(date);
 
-      return offer;
-    });
+    if (!offer) {
+      throw new NotFoundError(`There is no offer for ${date} date`);
+    }
 
-    this.getAvatar = async(async (req, res) => {
-      const date = +req.params[`date`];
-      const offer = await this.offersRouter.store.get(date);
+    return offer;
+  });
 
-      if (!offer) {
-        throw new BadRequestError(`Offer wasn't found`);
-      }
+  const getAvatar = async(async (req, res) => {
+    const date = +req.params[`date`];
+    const offer = await offersRouter.store.get(date);
 
-      const avatar = offer.author && offer.author.avatar;
-      const mimeType = offer.author && offer.author[`mime-type`];
+    if (!offer) {
+      throw new BadRequestError(`Offer wasn't found`);
+    }
 
-      if (!avatar) {
-        throw new NotFoundError(`There is no avatar for this offer`);
-      }
+    const avatar = offer.author && offer.author.avatar;
+    const mimeType = offer.author && offer.author[`mime-type`];
 
-      const {info, stream} = await this.offersRouter.imageStore.get(date) || {};
-      if (!info) {
-        throw new NotFoundError(`File ${avatar.path} not found`);
-      }
+    if (!avatar) {
+      throw new NotFoundError(`There is no avatar for this offer`);
+    }
 
-      if (!stream) {
-        logger.error(`Loading image error ${avatar.path}`);
-        throw new InternalServerError(`File not found`);
-      }
+    const {info, stream} = await offersRouter.imageStore.get(date) || {};
+    if (!info) {
+      throw new NotFoundError(`File ${avatar.path} not found`);
+    }
 
-      res.set(`content-type`, mimeType);
-      res.set(`content-length`, info.length);
+    if (!stream) {
+      logger.error(`Loading image error ${avatar.path}`);
+      throw new InternalServerError(`File not found`);
+    }
 
-      return {res, stream};
-    });
+    res.set(`content-type`, mimeType);
+    res.set(`content-length`, info.length);
 
-    this.getPhoto = async(async (req, res) => {
-      const date = +req.params[`date`];
-      const id = +req.params[`id`];
-      const data = await this.offersRouter.store.get(date);
+    return {res, stream};
+  });
 
-      if (!data) {
-        throw new BadRequestError(`Offer wasn't found`);
-      }
+  const getPhoto = async(async (req, res) => {
+    const date = +req.params[`date`];
+    const id = +req.params[`id`];
+    const data = await offersRouter.store.get(date);
 
-      const photos = data.offer.photos;
+    if (!data) {
+      throw new BadRequestError(`Offer wasn't found`);
+    }
 
-      if (!photos) {
-        throw new NotFoundError(`There is no avatar for this offer`);
-      }
+    const photos = data.offer.photos;
 
-      const photoIndex = data.offer.photos.indexOf(`api/offers/${date}/photo/${id}`);
-      const mimeType = data.offer.photosMimeType[photoIndex];
+    if (!photos) {
+      throw new NotFoundError(`There is no avatar for this offer`);
+    }
 
-      const {info, stream} = await this.offersRouter.photoStore.get(`${date}/${id}`) || {};
-      if (!info) {
-        throw new NotFoundError(`File ${date}/${id} not found`);
-      }
+    const photoIndex = data.offer.photos.indexOf(`api/offers/${date}/photo/${id}`);
+    const mimeType = data.offer.photosMimeType[photoIndex];
 
-      if (!stream) {
-        logger.error(`Loading photo error`);
-        throw new InternalServerError(`File not found`);
-      }
+    const {info, stream} = await offersRouter.photoStore.get(`${date}/${id}`) || {};
+    if (!info) {
+      throw new NotFoundError(`File ${date}/${id} not found`);
+    }
 
-      res.set(`content-type`, mimeType);
-      res.set(`content-length`, info.length);
+    if (!stream) {
+      logger.error(`Loading photo error`);
+      throw new InternalServerError(`File not found`);
+    }
 
-      return {res, stream};
-    });
+    res.set(`content-type`, mimeType);
+    res.set(`content-length`, info.length);
+
+    return {res, stream};
+  });
 
 
-    this.add = async(async (req) => {
-      const data = req.body;
-      const avatar = (req.files[`avatar`] || {})[0];
-      const photos = req.files[`photos`] || [];
+  const add = async(async (req) => {
+    const data = req.body;
+    const avatar = (req.files[`avatar`] || {})[0];
+    const photos = req.files[`photos`] || [];
 
-      data.date = new Date().getTime();
-      const filename = data.date;
-      if (avatar) {
-        await this.offersRouter.imageStore.save(filename, createStreamFromBuffer(avatar.buffer));
-        data.avatar = `api/offers/${filename}/avatar`;
-        data.avatarMimeType = avatar.mimetype;
-      }
+    data.date = new Date().getTime();
+    const filename = data.date;
+    if (avatar) {
+      await offersRouter.imageStore.save(filename, createStreamFromBuffer(avatar.buffer));
+      data.avatar = `api/offers/${filename}/avatar`;
+      data.avatarMimeType = avatar.mimetype;
+    }
 
-      data.photos = [];
-      let index = 1;
-      for (let photo of photos) {
-        await this.offersRouter.photoStore.save(`${filename}/${index}`, createStreamFromBuffer(photo.buffer));
-        data.photos.push({
-          photo: `api/offers/${filename}/photo/${index}`,
-          mimetype: photo.mimetype
-        });
-        index = index + 1;
-      }
-      await this.offersRouter.store.save(data);
+    data.photos = [];
+    let index = 1;
+    for (let photo of photos) {
+      await offersRouter.photoStore.save(`${filename}/${index}`, createStreamFromBuffer(photo.buffer));
+      data.photos.push({
+        photo: `api/offers/${filename}/photo/${index}`,
+        mimetype: photo.mimetype
+      });
+      index = index + 1;
+    }
+    await offersRouter.store.save(data);
 
-      return data;
-    });
-  }
-}
+    return data;
+  });
 
-module.exports = (store) => new Offer(store);
+  return {
+    add,
+    get,
+    getAll,
+    getAvatar,
+    getPhoto
+  };
+};
