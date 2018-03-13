@@ -31,7 +31,8 @@ const getFormatedData = (data) => {
       "checkout": data.checkout,
       "features": data.features,
       "description": data.description,
-      "photos": []
+      "photos": data.photos.map((item) => item.photo),
+      "photosMimeType": data.photos.map((item) => item.mimetype)
     },
     "location": {
       "x": data.x,

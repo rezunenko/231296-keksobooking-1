@@ -45,6 +45,10 @@ class MockOffersStore {
 
 
 class MockImageStore {
+  constructor(name) {
+    this.name = name;
+  }
+
   async getBucket() {
   }
 
@@ -55,4 +59,4 @@ class MockImageStore {
   }
 }
 
-module.exports = offersRouter(new MockOffersStore(), new MockImageStore());
+module.exports = offersRouter(new MockOffersStore(), new MockImageStore(`avatars`), new MockImageStore(`photos`));
